@@ -30,15 +30,3 @@ class FlashcardSetViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-
-# class SetListView(generics.ListAPIView):
-#     serializer_class = SetSerializer
-#
-#     def get_queryset(self):
-#         """
-#         This view should return a list of all the sets
-#         of the currently authenticated user.
-#         """
-#         user = User.objects.get(pk=1)  # user = self.request.user
-#         return Set.objects.filter(owner=user)
