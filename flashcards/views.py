@@ -18,6 +18,10 @@ class FlashcardViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset.filter(owner=self.request.user)
+
 
 class FlashcardSetViewSet(viewsets.ModelViewSet):
     """
@@ -30,3 +34,7 @@ class FlashcardSetViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset.filter(owner=self.request.user)
