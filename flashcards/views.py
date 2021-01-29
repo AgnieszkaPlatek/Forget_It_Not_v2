@@ -1,9 +1,9 @@
-from django.contrib.auth.models import User
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Flashcard, FlashcardSet
+from .permissions import IsOwner
 from .serializers import FlashcardSerializer, FlashcardSetSerializer
-
 
 
 class FlashcardViewSet(viewsets.ModelViewSet):
@@ -13,8 +13,7 @@ class FlashcardViewSet(viewsets.ModelViewSet):
     """
     queryset = Flashcard.objects.all()
     serializer_class = FlashcardSerializer
-
-    # permission_classes = []
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -27,11 +26,11 @@ class FlashcardSetViewSet(viewsets.ModelViewSet):
     """
     queryset = FlashcardSet.objects.all()
     serializer_class = FlashcardSetSerializer
-
-    # permission_classes = []
+    permission_classes = [IsAuthenticated, IsOwner]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
 
 # class SetListView(generics.ListAPIView):
 #     serializer_class = SetSerializer

@@ -25,7 +25,7 @@ class Flashcard(models.Model):
     """
     Flashcard model, each flashcard belongs to one set.
     """
-    flashcard_set = models.ForeignKey(FlashcardSet, on_delete=models.CASCADE)
+    flashcard_set = models.ForeignKey(FlashcardSet, related_name='flashcards', on_delete=models.CASCADE)
     front = models.CharField(max_length=50, verbose_name=_('front'))
     back = models.CharField(max_length=50, verbose_name=_('back'))
     added = models.DateField(auto_now_add=True)
