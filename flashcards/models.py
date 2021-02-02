@@ -17,6 +17,10 @@ class FlashcardSet(models.Model):
     class Meta:
         ordering = ['-created']
 
+    @property
+    def owner_name(self):
+        return self.owner.username
+
     def __str__(self):
         return self.name
 
@@ -34,6 +38,10 @@ class Flashcard(models.Model):
 
     class Meta:
         ordering = ['-added']
+
+    @property
+    def owner_name(self):
+        return self.owner.username
 
     def __str__(self):
         return f'{self.front} - {self.back}'
