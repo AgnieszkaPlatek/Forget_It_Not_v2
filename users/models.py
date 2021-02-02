@@ -4,8 +4,14 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
 
+#TODO Should I get rid of this custom User?
+#TODO Fix this save method and remove signals
+
 class User(AbstractUser):
-    pass
+        pass
+    # def save(self, *args, **kwargs):
+    #     super(User, self).save(*args, **kwargs)
+    #     Token.objects.create(user=self)
 
 
 @receiver(post_save, sender=User)

@@ -36,5 +36,4 @@ class FlashcardSetViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        queryset = self.queryset
-        return queryset.filter(owner=self.request.user)
+        return self.queryset.filter(owner=self.request.user)

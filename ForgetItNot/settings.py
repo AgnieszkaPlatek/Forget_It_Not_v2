@@ -36,11 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'flashcards',
-    'users',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'flashcards',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -138,8 +138,7 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
-    'SERIALIZERS': {
-    },
+    'SERIALIZERS': {},
 }
 
 
