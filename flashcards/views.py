@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Flashcard, FlashcardSet
 from .permissions import IsOwner
 from .serializers import FlashcardSerializer, FlashcardSetSerializer
+from .helpers import CustomSearchFilter
 
 
 class FlashcardViewSet(viewsets.ModelViewSet):
@@ -14,6 +15,7 @@ class FlashcardViewSet(viewsets.ModelViewSet):
     queryset = Flashcard.objects.all()
     serializer_class = FlashcardSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    filter_backends = [CustomSearchFilter]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
