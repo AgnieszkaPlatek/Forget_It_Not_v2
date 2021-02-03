@@ -1,10 +1,10 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from .helpers import CustomSearchFilter
 from .models import Flashcard, FlashcardSet
 from .permissions import IsOwner
 from .serializers import FlashcardSerializer, FlashcardSetSerializer
-from .helpers import CustomSearchFilter
 
 
 class FlashcardViewSet(viewsets.ModelViewSet):
@@ -21,8 +21,7 @@ class FlashcardViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        queryset = self.queryset
-        return queryset.filter(owner=self.request.user)
+        return self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs['flashcard_set_pk'])
 
 
 class FlashcardSetViewSet(viewsets.ModelViewSet):
