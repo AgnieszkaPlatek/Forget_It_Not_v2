@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
 from .helpers import CustomSearchFilter
@@ -35,6 +36,19 @@ class FlashcardSetViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user)
+
+
+class SearchView(ListAPIView):
+    """
+    View to search for flashcards in all user's flashcards from different sets.
+    """
+    queryset = Flashcard.objects.all()
+    serializer_class = FlashcardSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    filter_backends = [CustomSearchFilter]
 
     def get_queryset(self):
         return self.queryset.filter(owner=self.request.user)
