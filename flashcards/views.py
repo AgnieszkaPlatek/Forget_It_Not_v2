@@ -22,7 +22,14 @@ class FlashcardViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        return self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs['flashcard_set_pk'])
+        self.queryset = self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs['flashcard_set_pk'])
+        min_date = self.request.GET.get('min_date')
+        max_date = self.request.GET.get('max_date')
+        if min_date:
+            self.queryset = self.queryset.filter(added__gte=min_date)
+        if max_date:
+            self.queryset = self.queryset.filter(added__lte=max_date)
+        return self.queryset
 
 
 class FlashcardSetViewSet(viewsets.ModelViewSet):
