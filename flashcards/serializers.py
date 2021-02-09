@@ -12,8 +12,7 @@ class FlashcardSerializer(serializers.ModelSerializer):
 
 
 class FlashcardSetSerializer(serializers.ModelSerializer):
-    # flashcards = FlashcardSerializer(many=True, read_only=True)
-    flashcards = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    flashcards = FlashcardSerializer(many=True)
     owner_name = serializers.CharField(read_only=True)
 
     class Meta:

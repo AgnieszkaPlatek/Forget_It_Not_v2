@@ -1,7 +1,7 @@
 from rest_framework import filters
 
 
-class CustomSearchFilter(filters.SearchFilter):
+class CardFrontBackSearchFilter(filters.SearchFilter):
     """
     Enables the user to specify search fields and if none are chosen both fields are used.
     """
