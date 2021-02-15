@@ -43,5 +43,14 @@ class Flashcard(models.Model):
     def owner_name(self):
         return self.owner.username
 
+    @property
+    def set_name(self):
+        return self.flashcard_set.name
+
+    @property
+    def set_created(self):
+        return self.flashcard_set.created
+
+
     def __str__(self):
         return f'{self.front} - {self.back}'
