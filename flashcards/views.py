@@ -35,6 +35,7 @@ class FlashcardSetViewSet(viewsets.ModelViewSet):
     queryset = FlashcardSet.objects.all()
     serializer_class = FlashcardSetSerializer
     permission_classes = [IsAuthenticated, IsOwner]
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
