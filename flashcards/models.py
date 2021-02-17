@@ -21,6 +21,10 @@ class FlashcardSet(models.Model):
     def owner_name(self):
         return self.owner.username
 
+    @property
+    def num_flashcards(self):
+        return Flashcard.objects.filter(flashcard_set=self).count()
+
     def __str__(self):
         return self.name
 
@@ -50,7 +54,6 @@ class Flashcard(models.Model):
     @property
     def set_created(self):
         return self.flashcard_set.created
-
 
     def __str__(self):
         return f'{self.front} - {self.back}'
