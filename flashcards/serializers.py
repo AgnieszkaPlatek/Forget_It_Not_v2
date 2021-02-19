@@ -4,6 +4,9 @@ from .models import FlashcardSet, Flashcard
 
 
 class FlashcardSerializer(serializers.ModelSerializer):
+    owner = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
     owner_name = serializers.CharField(read_only=True)
     set_name = serializers.CharField(read_only=True)
     set_created = serializers.CharField(read_only=True)
