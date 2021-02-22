@@ -18,7 +18,10 @@ class FlashcardSerializer(serializers.ModelSerializer):
 
 
 class FlashcardSetSerializer(serializers.ModelSerializer):
-    flashcards = FlashcardSerializer(many=True)
+    owner = serializers.HiddenField(
+        default=serializers.CurrentUserDefault()
+    )
+    flashcards = FlashcardSerializer(many=True, required=False)
     owner_name = serializers.CharField(read_only=True)
     num_flashcards = serializers.CharField(read_only=True)
 
