@@ -10,11 +10,13 @@ class FlashcardSerializer(serializers.ModelSerializer):
     owner_name = serializers.CharField(read_only=True)
     set_name = serializers.CharField(read_only=True)
     set_created = serializers.CharField(read_only=True)
+    next_id = serializers.IntegerField(read_only=True, allow_null=True)
+    previous_id = serializers.IntegerField(read_only=True, allow_null=True)
 
     class Meta:
         model = Flashcard
         fields = ['id', 'flashcard_set', 'set_name', 'set_created', 'front', 'back', 'owner', 'owner_name', 'added',
-                  'last_modified']
+                  'last_modified', 'next_id', 'previous_id']
 
 
 class FlashcardSetSerializer(serializers.ModelSerializer):

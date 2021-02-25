@@ -55,5 +55,29 @@ class Flashcard(models.Model):
     def set_created(self):
         return self.flashcard_set.created
 
+    @property
+    def flashcards_ids(self):
+        """
+        Helps in finding next and previous flashcard to let the user easily browse flashcards from their set.
+        returns: a list of ids of all flashcards that are in the same set as the flashcard with the given id.
+        """
+        flashcards = Flashcard.objects.filter(flashcard_set=self.flashcard_set)
+        return sorted([flashcard.id for flashcard in flashcards])
+
+    @property
+    def next_id(self):
+        index = self.flashcards_ids.index(self.pk)
+        try:
+            return self.flashcards_ids[index + 1]
+        except IndexError:
+            return None
+
+    @property
+    def previous_id(self):
+        index = self.flashcards_ids.index(self.pk)
+        if self.flashcards_ids[0] == self.pk:
+            return None
+        return self.flashcards_ids[index - 1]
+
     def __str__(self):
         return f'{self.front} - {self.back}'

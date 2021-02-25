@@ -8,8 +8,10 @@ class PagesCountPagination(pagination.PageNumberPagination):
         previous_page = self.page.previous_page_number() if self.page.has_previous() else None
 
         return Response({
-            'next_link': self.get_next_link(),
-            'previous_link': self.get_previous_link(),
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link()
+             },
             'count': self.page.paginator.count,
             'total_pages': self.page.paginator.num_pages,
             'current_page': self.page.number,
