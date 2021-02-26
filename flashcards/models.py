@@ -62,7 +62,7 @@ class Flashcard(models.Model):
         returns: a list of ids of all flashcards that are in the same set as the flashcard with the given id.
         """
         flashcards = Flashcard.objects.filter(flashcard_set=self.flashcard_set)
-        return sorted([flashcard.id for flashcard in flashcards])
+        return sorted([flashcard.id for flashcard in flashcards], reverse=True)
 
     @property
     def next_id(self):
