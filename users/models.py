@@ -9,10 +9,8 @@ class User(AbstractUser):
 
     @property
     def num_sets(self):
-        from flashcards.models import FlashcardSet
-        return FlashcardSet.objects.filter(owner=self).count()
+        return self.flashcardset_set.count()
 
     @property
     def num_flashcards(self):
-        from flashcards.models import Flashcard
-        return Flashcard.objects.filter(owner=self).count()
+        return self.flashcard_set.count()
