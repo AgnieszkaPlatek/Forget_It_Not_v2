@@ -131,7 +131,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PAGINATION_CLASS': 'flashcards.pagination.PagesCountPagination',
-    'PAGE_SIZE': 5
+    'PAGE_SIZE': 15
 }
 
 DJOSER = {

@@ -19,6 +19,7 @@ class FlashcardViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwner]
     filter_backends = [CardFrontBackSearchFilter, OrderingFilter]
     ordering_fields = ['front', 'added', 'back']
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
