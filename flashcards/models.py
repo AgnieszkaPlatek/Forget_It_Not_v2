@@ -41,7 +41,7 @@ class Flashcard(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['-added']
+        ordering = ['added']
 
     @property
     def owner_name(self):
