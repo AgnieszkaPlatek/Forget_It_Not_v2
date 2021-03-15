@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from django.test import TestCase
 
-from flashcards.models import FlashcardSet, Flashcard
+from ..models import FlashcardSet, Flashcard
 from users.models import User
 
 
@@ -16,6 +16,11 @@ class FlashcardSetTest(TestCase):
     def test_create_flashcard_set(self):
         set1 = FlashcardSet.objects.create(name="set1", owner=self.user)
         self.assertIn(set1, FlashcardSet.objects.filter(owner=self.user))
+
+    # @skip
+    # def test_raise_integrity_error_while_creating_with_missing_name(self):
+    #     with self.assertRaises(IntegrityError):
+    #         FlashcardSet.objects.create(owner=self.user)
 
     def test_get_all_user_flashcard_sets(self):
         FlashcardSet.objects.create(name='set1', owner=self.user)
@@ -38,7 +43,7 @@ class FlashcardSetTest(TestCase):
 
     def test_owner_name(self):
         set1 = FlashcardSet.objects.create(name="set1", owner=self.user)
-        self.assertEqual(set1.owner_name, self.user.username)
+        self.assertEqual('Tester1', set1.owner_name)
 
     def test_num_flashcards(self):
         set1 = FlashcardSet.objects.create(name="set1", owner=self.user)
@@ -61,16 +66,16 @@ class FlashcardTest(TestCase):
         with self.assertRaises(IntegrityError):
             Flashcard.objects.create(owner=self.user1, front='question', back='answer')
 
-    @skip
-    def test_raise_integrity_error_while_creating_with_missing_front(self):
-        with self.assertRaises(IntegrityError):
-            Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, back='answer1')
-            # Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question2')
-
-    @skip
-    def test_raise_integrity_error_while_creating_with_missing_back(self):
-        with self.assertRaises(IntegrityError):
-            Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question2')
+    # @skip
+    # def test_raise_integrity_error_while_creating_with_missing_front(self):
+    #     with self.assertRaises(IntegrityError):
+    #         Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, back='answer1')
+    #         # Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question2')
+    #
+    # @skip
+    # def test_raise_integrity_error_while_creating_with_missing_back(self):
+    #     with self.assertRaises(IntegrityError):
+    #         Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question2')
 
     def test_update_flashcard(self):
         flashcard_pk = Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question',
@@ -90,7 +95,7 @@ class FlashcardTest(TestCase):
     # def test_fail_to_update_with_flashcard_set_given_but_no_front_and_no_back(self):
     #     pass
 
-    def test_to_get_all_users_flashcards(self):
+    def test_to_get_all_user_flashcards(self):
         self.user2 = User.objects.create(username='Tester2', password='Testing321')
         self.set2 = FlashcardSet.objects.create(name='set2', owner=self.user1)
         self.set3 = FlashcardSet.objects.create(name='set3', owner=self.user2)
@@ -107,3 +112,19 @@ class FlashcardTest(TestCase):
         Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question2', back='answer2')
         Flashcard.objects.create(owner=self.user1, flashcard_set=self.set2, front='question3', back='answer3')
         self.assertEqual(2, Flashcard.objects.filter(flashcard_set=self.set1).count())
+
+    def test_owner_name(self):
+        flashcard = Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question1',
+                                             back='answer1')
+        self.assertEqual('Tester1', flashcard.owner_name)
+
+    def test_set_name(self):
+        flashcard = Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question1',
+                                             back='answer1')
+        self.assertURLEqual('set1', flashcard.set_name)
+
+    def test_set_created(self):
+        date_created = self.set1.created
+        flashcard = Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question1',
+                                             back='answer1')
+        self.assertEqual(date_created, flashcard.set_created)

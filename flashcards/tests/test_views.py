@@ -4,22 +4,33 @@ from django.test import TestCase
 from unittest import skip
 from rest_framework.test import APIClient
 
-from flashcards.models import FlashcardSet, Flashcard
+from ..models import FlashcardSet, Flashcard
+from ..views import FlashcardViewSet, FlashcardSetViewSet, FlashcardListView
 from users.models import User
 
 
-# class FlashcardSetTest(TestCase):
-#
-#     def setUp(self):
-#         self.factory = APIRequestFactory()
-#         self.user = User.objects.create(username="tester")
-#         client = APIClient()
-#         client.force_authenticate(user=self.user)
-#
-#     def test_create_flashcard_set(self):
-#         response = self.client.post('api/flashcard-sets/', {'name': 'testing'})
-#         self.assertEqual(response.status_code, 201)
-#         # self.assertEqual('testing', FlashcardSet.objects.get(owner=self.user))
+class FlashcardSetTest(TestCase):
+
+    def setUp(self):
+        # self.client = APIClient()
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create(username='Tester1')
+
+    def test_get(self):
+        endpoint = '/flashcard-sets/'
+        request = self.factory.get(endpoint)
+        force_authenticate(request, user=self.user)
+        response = FlashcardSetViewSet.as_view({'get': 'list'})(request)
+        self.assertEqual(200, response.status_code)
+
+    def test_post(self):
+        endpoint = '/flashcard-sets/'
+        data = {'name': 'testing'}
+        request = self.factory.post(endpoint, data)
+        force_authenticate(request, user=self.user)
+        response = FlashcardSetViewSet.as_view({'post': 'create'})(request)
+        self.assertEqual(201, response.status_code)
+
 #
 #     @skip
 #     def test_get_all_users_flashcard_sets(self):
