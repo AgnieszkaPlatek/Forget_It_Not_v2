@@ -13,4 +13,5 @@ router.register(r'flashcard-sets', views.FlashcardSetViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('flashcard-list/<flashcard_set_pk>/', views.FlashcardListView.as_view()),
+    path('flashcard-learning-list/<flashcard_set_pk>/', views.FlashcardLearningListView.as_view()),
 ]

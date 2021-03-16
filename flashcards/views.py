@@ -64,3 +64,24 @@ class FlashcardListView(ListAPIView):
         if max_date:
             self.queryset = self.queryset.filter(added__lte=max_date)
         return self.queryset
+
+
+class FlashcardLearningListView(ListAPIView):
+    """
+    View to get all flashcards from the set filtered by date for learning part of a set.
+    """
+    queryset = Flashcard.objects.all()
+    serializer_class = FlashcardSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    pagination_class = None
+
+
+    def get_queryset(self):
+        self.queryset = self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs.get('flashcard_set_pk'))
+        min_date = self.request.GET.get('min_date')
+        max_date = self.request.GET.get('max_date')
+        if min_date:
+            self.queryset = self.queryset.filter(added__gte=min_date)
+        if max_date:
+            self.queryset = self.queryset.filter(added__lte=max_date)
+        return self.queryset
