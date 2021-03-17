@@ -75,7 +75,6 @@ class FlashcardLearningListView(ListAPIView):
     permission_classes = [IsAuthenticated, IsOwner]
     pagination_class = None
 
-
     def get_queryset(self):
         self.queryset = self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs.get('flashcard_set_pk'))
         min_date = self.request.GET.get('min_date')
