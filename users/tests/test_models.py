@@ -17,8 +17,7 @@ class UserTest(TestCase):
 
     def test_num_sets(self):
         user_sets = FlashcardSet.objects.filter(owner=self.user).count()
-        self.assertEqual(user_sets, self.user.num_sets)
-
+        self.assertEqual(self.user.num_sets, user_sets)
 
     def test_num_flashcards(self):
         Flashcard.objects.create(owner=self.user, flashcard_set=self.set1, front='question1', back='answer1')
@@ -27,4 +26,4 @@ class UserTest(TestCase):
         Flashcard.objects.create(owner=self.user, flashcard_set=self.set2, front='question4', back='answer4')
         Flashcard.objects.create(owner=self.user, flashcard_set=self.set2, front='question5', back='answer5')
         user_flashcards = Flashcard.objects.filter(owner=self.user).count()
-        self.assertEqual(user_flashcards, self.user.num_flashcards)
+        self.assertEqual(self.user.num_flashcards, user_flashcards)
