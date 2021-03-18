@@ -12,7 +12,9 @@ router.register(r'flashcard-sets', views.FlashcardSetViewSet, basename='flashcar
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
     path('', include(router.urls)),
-    path('flashcard-list/<flashcard_set_pk>/', views.FlashcardListView.as_view(), name='user-list'),
-    path('flashcard-learning-list/<flashcard_set_pk>/', views.FlashcardLearningListView.as_view(),
-         name='learning-list'),
+    path('flashcard-list/<flashcard_set_pk>/', views.FlashcardListView.as_view(), name='list'),
+    path('learn/<flashcard_set_pk>/', views.FlashcardLearnView.as_view(),
+         name='learn-list'),
+    path('search/<flashcard_set_pk>/', views.SearchView.as_view(),
+         name='search-browse'),
 ]

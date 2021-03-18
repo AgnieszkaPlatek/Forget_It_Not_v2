@@ -7,6 +7,7 @@ from .helpers import CardFrontBackSearchFilter
 from .models import Flashcard, FlashcardSet
 from .permissions import IsOwner
 from .serializers import FlashcardSerializer, FlashcardSetSerializer
+from .pagination import PagesCountSmallPagination
 
 
 class FlashcardViewSet(viewsets.ModelViewSet):
@@ -46,14 +47,13 @@ class FlashcardSetViewSet(viewsets.ModelViewSet):
 
 
 class FlashcardListView(ListAPIView):
-    """
-    View to filter, sort and search for flashcards in a set.
-    """
+    """View to list, sort and filter flashcards from the set by date."""
     queryset = Flashcard.objects.all()
     serializer_class = FlashcardSerializer
     permission_classes = [IsAuthenticated, IsOwner]
-    filter_backends = [CardFrontBackSearchFilter, OrderingFilter]
+    filter_backends = [OrderingFilter]
     ordering_fields = ['front', 'back', 'added']
+    pagination_class = PagesCountSmallPagination
 
     def get_queryset(self):
         self.queryset = self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs.get('flashcard_set_pk'))
@@ -66,10 +66,9 @@ class FlashcardListView(ListAPIView):
         return self.queryset
 
 
-class FlashcardLearningListView(ListAPIView):
-    """
-    View to get all flashcards from the set filtered by date for learning part of a set.
-    """
+class FlashcardLearnView(ListAPIView):
+    """Non-paginated view to filter flashcards by date for learning part of the set,
+    to enable passing more flashcards to learning session and for browsing flashcards"""
     queryset = Flashcard.objects.all()
     serializer_class = FlashcardSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -84,3 +83,15 @@ class FlashcardLearningListView(ListAPIView):
         if max_date:
             self.queryset = self.queryset.filter(added__lte=max_date)
         return self.queryset
+
+
+class SearchView(ListAPIView):
+    """View to search for a flashcard in the set."""
+    queryset = Flashcard.objects.all()
+    serializer_class = FlashcardSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+    filter_backends = [CardFrontBackSearchFilter]
+    pagination_class = None
+
+    def get_queryset(self):
+        return self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs.get('flashcard_set_pk'))

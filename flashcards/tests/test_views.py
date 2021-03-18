@@ -73,3 +73,11 @@ class FlashcardListTest(APITestCase):
         data = {'flashcard_set': self.set1_pk, 'front': 'question', 'back': 'answer'}
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+class FlashcardLearnView(APITestCase):
+    pass
+
+
+class SearchView(APITestCase):
+    pass
