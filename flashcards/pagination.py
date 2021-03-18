@@ -20,3 +20,6 @@ class PagesCountPagination(pagination.PageNumberPagination):
             'pages': [x+1 for x in range(self.page.paginator.num_pages)],
             'results': data
         })
+
+class PagesCountSmallPagination(PagesCountPagination):
+    page_size = 20
