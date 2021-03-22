@@ -16,5 +16,5 @@ urlpatterns = [
     path('learn/<flashcard_set_pk>/', views.FlashcardLearnView.as_view(),
          name='learn-list'),
     path('search/<flashcard_set_pk>/', views.SearchView.as_view(),
-         name='search-browse'),
+         name='search-set'),
 ]
