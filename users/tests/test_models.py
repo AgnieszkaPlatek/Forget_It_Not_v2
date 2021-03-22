@@ -1,8 +1,5 @@
-from unittest import skip
-
-from django.core.exceptions import ObjectDoesNotExist
-from django.db import IntegrityError
 from django.test import TestCase
+from rest_framework.authtoken.models import Token
 
 from flashcards.models import FlashcardSet, Flashcard
 from ..models import User
@@ -16,8 +13,7 @@ class UserTest(TestCase):
         self.set2 = FlashcardSet.objects.create(name='set2', owner=self.user)
 
     def test_num_sets(self):
-        user_sets = FlashcardSet.objects.filter(owner=self.user).count()
-        self.assertEqual(self.user.num_sets, user_sets)
+        self.assertEqual(self.user.num_sets, 2)
 
     def test_num_flashcards(self):
         Flashcard.objects.create(owner=self.user, flashcard_set=self.set1, front='question1', back='answer1')
@@ -25,5 +21,7 @@ class UserTest(TestCase):
         Flashcard.objects.create(owner=self.user, flashcard_set=self.set1, front='question3', back='answer3')
         Flashcard.objects.create(owner=self.user, flashcard_set=self.set2, front='question4', back='answer4')
         Flashcard.objects.create(owner=self.user, flashcard_set=self.set2, front='question5', back='answer5')
-        user_flashcards = Flashcard.objects.filter(owner=self.user).count()
-        self.assertEqual(self.user.num_flashcards, user_flashcards)
+        self.assertEqual(self.user.num_flashcards, 5)
+
+    def test_users_token_created(self):
+        self.assertEqual(Token.objects.get(user=self.user), Token.objects.last())

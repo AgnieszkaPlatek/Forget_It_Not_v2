@@ -21,5 +21,6 @@ class PagesCountPagination(pagination.PageNumberPagination):
             'results': data
         })
 
+
 class PagesCountSmallPagination(PagesCountPagination):
-    page_size = 20
+    page_size = 10

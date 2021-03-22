@@ -15,12 +15,6 @@ class FlashcardSetTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(username='Tester1', password='Testing321')
 
-    # to be deleted
-    def test_raise_validation_error_while_creating_with_missing_name(self):
-        with self.assertRaises(ValidationError):
-            flashcard_set = FlashcardSet.objects.create(owner=self.user)
-            flashcard_set.full_clean()
-
     def test_owner_name(self):
         set1 = FlashcardSet.objects.create(name="set1", owner=self.user)
         self.assertEqual(set1.owner_name, 'Tester1')
@@ -41,23 +35,6 @@ class FlashcardTest(TestCase):
     def setUp(self):
         self.user1 = User.objects.create(username='Tester1', password='Testing321')
         self.set1 = FlashcardSet.objects.create(name='set1', owner=self.user1)
-
-    # to be deleted
-    def test_raise_integrity_error_while_creating_with_missing_flashcard_set(self):
-        with self.assertRaises(IntegrityError):
-            Flashcard.objects.create(owner=self.user1, front='question', back='answer')
-
-    # to be deleted
-    def test_raise_validation_error_while_creating_with_missing_front(self):
-        with self.assertRaises(ValidationError):
-            flashcard = Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, back='answer1')
-            flashcard.full_clean()
-
-    # to be deleted
-    def test_raise_validation_error_while_creating_with_missing_back(self):
-        with self.assertRaises(ValidationError):
-            flashcard = Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question2')
-            flashcard.full_clean()
 
     def test_to_get_all_user_flashcards(self):
         self.user2 = User.objects.create(username='Tester2', password='Testing321')
@@ -85,7 +62,7 @@ class FlashcardTest(TestCase):
     def test_set_name(self):
         flashcard = Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='question1',
                                              back='answer1')
-        self.assertURLEqual(flashcard.set_name, 'set1')
+        self.assertEqual(flashcard.set_name, 'set1')
 
     def test_set_created(self):
         date_created = self.set1.created
