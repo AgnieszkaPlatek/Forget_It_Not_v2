@@ -9,3 +9,10 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'num_sets', 'num_flashcards']
+
+
+class DemoTokenUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['token']
