@@ -40,5 +40,5 @@ class DemoTokenView(APIView):
             demo_token = Token.objects.get(user=demo_user)
             serializer = DemoTokenUserSerializer(data={'token': str(demo_token)})
             response = Response(serializer.initial_data, status=status.HTTP_201_CREATED)
-            response.set_cookie(key='demo', value=demo_username)
+            response.set_cookie(key='demo', value=demo_username, max_age=31536000)
             return response
