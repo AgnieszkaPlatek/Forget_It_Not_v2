@@ -5,4 +5,4 @@ chromedriver.exe
 venv
 .coverage
 htmlcov/
-
+ForgetItNot/settings.py
