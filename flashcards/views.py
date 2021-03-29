@@ -66,23 +66,12 @@ class FlashcardListView(ListAPIView):
         return self.queryset
 
 
-class FlashcardLearnView(ListAPIView):
+class FlashcardLearnView(FlashcardListView):
     """Non-paginated view to filter flashcards by date for learning part of the set,
     to enable passing more flashcards to learning session and for browsing flashcards"""
-    queryset = Flashcard.objects.all()
-    serializer_class = FlashcardSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    filter_backends = []
+    ordering_fields = []
     pagination_class = None
-
-    def get_queryset(self):
-        self.queryset = self.queryset.filter(owner=self.request.user, flashcard_set=self.kwargs.get('flashcard_set_pk'))
-        min_date = self.request.GET.get('min_date')
-        max_date = self.request.GET.get('max_date')
-        if min_date:
-            self.queryset = self.queryset.filter(added__gte=min_date)
-        if max_date:
-            self.queryset = self.queryset.filter(added__lte=max_date)
-        return self.queryset
 
 
 class SearchView(ListAPIView):

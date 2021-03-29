@@ -1,11 +1,7 @@
-from unittest import skip
-
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.db import IntegrityError
 
 from ..models import FlashcardSet, Flashcard
-from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
