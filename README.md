@@ -2,7 +2,7 @@
 I am working on this project during mentorship DareIT programme,
 It is supervised by my mentor.
 
-It is a backend Django API for application Forget-It-Not application.
+It is a backend Django API for Forget-It-Not application.
 
 
 ## Table of contents
