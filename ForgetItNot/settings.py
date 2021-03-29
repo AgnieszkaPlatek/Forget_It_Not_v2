@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
+    'drf_yasg',
     'flashcards',
     'users',
 ]
@@ -147,7 +148,7 @@ DJOSER = {
     'SET_PASSWORD_RETYPE': True,
     'PASSWORD_RESET_CONFIRM_RETYPE': True,
     'SERIALIZERS': {
-        'current_user': 'users.serializers.UserSerializer',
+        'current_user': 'users.serializers.MyUserSerializer',
     },
 }
 

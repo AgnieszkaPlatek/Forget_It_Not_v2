@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from flashcards.helpers import create_example_set
 from .models import User
-from .serializers import UserSerializer, DemoTokenUserSerializer
+from .serializers import MyUserSerializer, DemoTokenUserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -16,7 +16,7 @@ class UserViewSet(viewsets.ModelViewSet):
     API url that allows users to be viewed or edited.
     """
     queryset = User.objects.all().order_by('-date_joined')
-    serializer_class = UserSerializer
+    serializer_class = MyUserSerializer
     # permission_classes = []
 
 
