@@ -1,6 +1,6 @@
 # Forget-It-Not - BACKEND
 I am working on this project during mentorship DareIT programme,
-It is supervised by my mentor.
+It is supervised by my mentor Kasia Jagieła.
 
 It is a backend Django API for Forget-It-Not application.
 

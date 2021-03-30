@@ -105,6 +105,33 @@ class FlashcardTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['back'], 'answer_changed')
 
+    def test_search_in_back_and_front(self):
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='palec', back='finger')
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='płetwa', back='fin')
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set2, front='palce', back='fingers')
+        Flashcard.objects.create(owner=self.user2, flashcard_set=self.set1, front='finał', back='final')
+        response = self.client.get(reverse('flashcard-list') + '?search=fin')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+    def test_search_in_front(self):
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='palec', back='finger')
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='blady', back='pale')
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set2, front='palce', back='fingers')
+        Flashcard.objects.create(owner=self.user2, flashcard_set=self.set1, front='palma', back='palm')
+        response = self.client.get(reverse('flashcard-list') + '?search_field=front&search=pal')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_search_in_back(self):
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='palec', back='finger')
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set1, front='blady', back='pale')
+        Flashcard.objects.create(owner=self.user1, flashcard_set=self.set2, front='palce', back='fingers')
+        Flashcard.objects.create(owner=self.user2, flashcard_set=self.set1, front='palma', back='palm')
+        response = self.client.get(reverse('flashcard-list') + '?search_field=back&search=pal')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
 
 class FlashcardListTest(APITestCase):
 
@@ -176,11 +203,11 @@ class SearchView(APITestCase):
         self.assertEqual(len(response.data), 3)
 
     def test_search_in_front(self):
-        response = self.client.get(self.url + '?search_fields=front&search=fin')
+        response = self.client.get(self.url + '?search_field=front&search=fin')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
-    def test_search_in_both(self):
-        response = self.client.get(self.url + '?search_fields=back&search=quest')
+    def test_search_in_back(self):
+        response = self.client.get(self.url + '?search_field=back&search=quest')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)

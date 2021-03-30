@@ -17,13 +17,12 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = MyUserSerializer
-    # permission_classes = []
 
 
 class DemoTokenView(APIView):
     """
     API url for getting or creating demo users.
-    Returns demo user token to enable token authenticatoin with demo user's account.
+    Returns demo user token to enable token authentication with demo user's account.
     """
     def put(self, request):
         if 'demo' in request.COOKIES:

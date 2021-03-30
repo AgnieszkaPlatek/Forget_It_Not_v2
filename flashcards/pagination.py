@@ -23,4 +23,4 @@ class PagesCountPagination(pagination.PageNumberPagination):
 
 
 class PagesCountSmallPagination(PagesCountPagination):
-    page_size = 10
+    page_size = 15
