@@ -9,20 +9,23 @@ User = get_user_model()
 class FlashcardSetTest(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create(username='Tester1', password='Testing321')
+        self.user1 = User.objects.create(username='Tester1', password='Testing321')
+        self.user2 = User.objects.create(username='Tester2', password='Testing321')
 
     def test_owner_name(self):
-        set1 = FlashcardSet.objects.create(name="set1", owner=self.user)
+        set1 = FlashcardSet.objects.create(name="set1", owner=self.user1)
         self.assertEqual(set1.owner_name, 'Tester1')
 
     def test_num_flashcards(self):
-        set1 = FlashcardSet.objects.create(name="set1", owner=self.user)
-        Flashcard.objects.create(owner=self.user, flashcard_set=set1, front='question1', back='answer1')
-        Flashcard.objects.create(owner=self.user, flashcard_set=set1, front='question2', back='answer2')
+        set1 = FlashcardSet.objects.create(name="example", owner=self.user1)
+        set2 = FlashcardSet.objects.create(name="example", owner=self.user2)
+        Flashcard.objects.create(owner=self.user1, flashcard_set=set1, front='question1', back='answer1')
+        Flashcard.objects.create(owner=self.user1, flashcard_set=set1, front='question2', back='answer2')
+        Flashcard.objects.create(owner=self.user2, flashcard_set=set2, front='question3', back='answer3')
         self.assertEqual(set1.num_flashcards, 2)
 
     def test_str(self):
-        flashcard_set = FlashcardSet.objects.create(owner=self.user, name='my-set')
+        flashcard_set = FlashcardSet.objects.create(owner=self.user1, name='my-set')
         self.assertEqual(str(flashcard_set), 'my-set')
 
 

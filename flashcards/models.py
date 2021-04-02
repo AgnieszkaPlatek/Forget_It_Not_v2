@@ -23,7 +23,7 @@ class FlashcardSet(models.Model):
 
     @property
     def num_flashcards(self):
-        return Flashcard.objects.filter(flashcard_set=self).count()
+        return Flashcard.objects.filter(flashcard_set=self, owner=self.owner).count()
 
     def __str__(self):
         return self.name
