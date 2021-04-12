@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import Token
 
 
 class User(AbstractUser):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, null=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
