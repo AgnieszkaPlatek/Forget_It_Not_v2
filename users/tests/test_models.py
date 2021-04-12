@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.test import TestCase
 from rest_framework.authtoken.models import Token
 
@@ -25,3 +26,12 @@ class UserTest(TestCase):
 
     def test_users_token_created(self):
         self.assertEqual(Token.objects.get(user=self.user), Token.objects.last())
+
+    def test_fails_to_create_with_existing_username(self):
+        with self.assertRaises(IntegrityError):
+            User.objects.create(username='Tester1', password='Testing543')
+
+    def test_not_create_with_existing_email(self):
+        User.objects.create(username='User1', password='Testing321', email='email@email.com')
+        with self.assertRaises(IntegrityError):
+            User.objects.create(username='User2', password='Testing543', email='email@email.com')
