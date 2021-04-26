@@ -12,7 +12,7 @@ from .pagination import PagesCountSmallPagination
 
 class FlashcardViewSet(viewsets.ModelViewSet):
     """
-    This viewset automatically provides `list`, `create`, `retrieve`,
+    This viewset automatically provides `list`, `create`, `retrieve`,g
     `update` and `destroy` actions.
     """
     queryset = Flashcard.objects.all()
