@@ -8,16 +8,9 @@ User = get_user_model()
 
 
 @pytest.fixture
-def user():
-    user = User.objects.create(username='Tester', password='Testing321')
-    yield user
-    user.delete()
-
-
-@pytest.fixture
-def example_set(user):
-    create_example_set(user)
-    example_set = FlashcardSet.objects.filter(owner=user).last()
+def example_set(user1):
+    create_example_set(user1)
+    example_set = FlashcardSet.objects.filter(owner=user1).last()
     yield example_set
     example_set.delete()
 

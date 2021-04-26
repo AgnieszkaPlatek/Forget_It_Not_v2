@@ -2,29 +2,8 @@ import pytest
 from django.db import IntegrityError
 from rest_framework.authtoken.models import Token
 
-from flashcards.models import FlashcardSet, Flashcard
+from flashcards.models import Flashcard
 from ..models import User
-
-
-@pytest.fixture
-def user1():
-    user1 = User.objects.create(username='Tester1', password='Testing321')
-    yield user1
-    user1.delete()
-
-
-@pytest.fixture
-def set1(user1):
-    set1 = FlashcardSet.objects.create(name="set1", owner=user1)
-    yield set1
-    set1.delete()
-
-
-@pytest.fixture
-def set2(user1):
-    set2 = FlashcardSet.objects.create(name="set2", owner=user1)
-    yield set2
-    set2.delete()
 
 
 @pytest.mark.django_db

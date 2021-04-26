@@ -7,31 +7,10 @@ User = get_user_model()
 
 
 @pytest.fixture
-def user1():
-    user1 = User.objects.create(username='Tester1', password='Testing321')
-    yield user1
-    user1.delete()
-
-
-@pytest.fixture
-def user2():
-    user2 = User.objects.create(username='Tester2', password='Testing321')
-    yield user2
-    user2.delete()
-
-
-@pytest.fixture
-def set1(user1):
-    set1 = FlashcardSet.objects.create(name="set1", owner=user1)
-    yield set1
-    set1.delete()
-
-
-@pytest.fixture
-def set2(user2):
-    set2 = FlashcardSet.objects.create(name="set2", owner=user2)
-    yield set2
-    set2.delete()
+def flashcard1(user1, set1):
+    flashcard1 = Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
+    yield flashcard1
+    flashcard1.delete()
 
 
 @pytest.mark.django_db
@@ -47,13 +26,6 @@ class TestFlashcardSet:
 
     def test_str(self, set1):
         assert str(set1) == 'set1'
-
-
-@pytest.fixture
-def flashcard1(user1, set1):
-    flashcard1 = Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
-    yield flashcard1
-    flashcard1.delete()
 
 
 @pytest.mark.django_db
