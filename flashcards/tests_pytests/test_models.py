@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 
-from ..models import FlashcardSet, Flashcard
+from ..models import Flashcard
 
 User = get_user_model()
 
@@ -18,11 +18,10 @@ class TestFlashcardSet:
     def test_owner_name(self, set1):
         assert set1.owner_name == 'Tester1'
 
-    def test_num_flashcards(self, user1, user2, set1, set2):
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question2', back='answer2')
-        Flashcard.objects.create(owner=user2, flashcard_set=set2, front='question3', back='answer3')
-        assert set1.num_flashcards == 2
+    def test_num_flashcards(self, user1, set1, set2, flashcard_factory):
+        flashcard_factory.create_batch(size=3, owner=user1, flashcard_set=set1)
+        flashcard_factory.create_batch(size=2, owner=user1, flashcard_set=set2)
+        assert set1.num_flashcards == 3
 
     def test_str(self, set1):
         assert str(set1) == 'set1'
@@ -31,21 +30,16 @@ class TestFlashcardSet:
 @pytest.mark.django_db
 class TestFlashcard:
 
-    def test_get_all_user_flashcards(self, user1, user2, set1, set2):
-        set3 = FlashcardSet.objects.create(name='set3', owner=user2)
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question2', back='answer2')
-        Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question3', back='answer3')
-        Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question4', back='answer4')
-        Flashcard.objects.create(owner=user2, flashcard_set=set3, front='question5', back='answer5')
-        assert Flashcard.objects.filter(owner=user1).count() == 4
+    def test_get_all_user_flashcards(self, user1, user2, set1, set2, set3, flashcard_factory):
+        flashcard_factory.create_batch(size=3, owner=user1, flashcard_set=set1)
+        flashcard_factory.create_batch(size=2, owner=user1, flashcard_set=set2)
+        flashcard_factory.create_batch(size=2, owner=user2, flashcard_set=set3)
+        assert Flashcard.objects.filter(owner=user1).count() == 5
 
-    def test_get_all_flashcards_from_one_flashcard_set(self, user1, set1):
-        set2 = FlashcardSet.objects.create(name='set2', owner=user1)
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question2', back='answer2')
-        Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question3', back='answer3')
-        assert Flashcard.objects.filter(flashcard_set=set1).count() == 2
+    def test_get_all_flashcards_from_one_flashcard_set(self, user1, set1, set2, flashcard_factory):
+        flashcard_factory.create_batch(size=3, owner=user1, flashcard_set=set1)
+        flashcard_factory.create_batch(size=2, owner=user1, flashcard_set=set2)
+        assert Flashcard.objects.filter(flashcard_set=set1).count() == 3
 
     def test_owner_name(self, flashcard1):
         assert flashcard1.owner_name == 'Tester1'
