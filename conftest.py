@@ -1,7 +1,9 @@
 import pytest
 from django.contrib.auth import get_user_model
+from pytest_factoryboy import register
 from rest_framework.test import APIClient
 
+from factories import UserFactory, FlashcardSetFactory, FlashcardFactory
 from flashcards.models import FlashcardSet
 
 User = get_user_model()
@@ -45,3 +47,8 @@ def set3(user2):
     set3 = FlashcardSet.objects.create(name="set3", owner=user2)
     yield set3
     set3.delete()
+
+
+register(FlashcardFactory)
+register(FlashcardSetFactory)
+register(UserFactory)

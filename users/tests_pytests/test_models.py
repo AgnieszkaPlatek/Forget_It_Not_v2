@@ -2,7 +2,6 @@ import pytest
 from django.db import IntegrityError
 from rest_framework.authtoken.models import Token
 
-from flashcards.models import Flashcard
 from ..models import User
 
 
@@ -12,13 +11,10 @@ class TestUser:
     def test_num_sets(self, user1, set1, set2):
         assert user1.num_sets == 2
 
-    def test_num_flashcards(self, user1, set1, set2):
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question2', back='answer2')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question3', back='answer3')
-        Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question4', back='answer4')
-        Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question5', back='answer5')
-        assert user1.num_flashcards == 5
+    def test_num_flashcards(self, flashcard_factory, user1, set1, set2):
+        flashcard_factory.create_batch(size=5, flashcard_set=set1, owner=user1)
+        flashcard_factory.create_batch(size=2, flashcard_set=set2, owner=user1)
+        assert user1.num_flashcards == 7
 
     def test_users_token_created(self, user1):
         assert Token.objects.get(user=user1) == Token.objects.last()
