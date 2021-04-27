@@ -17,16 +17,20 @@ def force_authenticate(client, user1):
 
 @pytest.fixture
 def frozen_flashcards(user1, user2, set1, set2, set3):
+    flashcards = []
     with freeze_time("2021-01-01"):
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
+        flashcards.append(Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1'))
     with freeze_time("2021-02-02"):
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question2', back='answer2')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question3', back='answer3')
+        flashcards.append(Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question2', back='answer2'))
+        flashcards.append(Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question3', back='answer3'))
     with freeze_time("2021-02-03"):
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question4', back='answer4')
-    Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question5', back='answer5')
-    Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question6', back='answer6')
-    Flashcard.objects.create(owner=user2, flashcard_set=set3, front='question7', back='answer7')
+        flashcards.append(Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question4', back='answer4'))
+    flashcards.append(Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question5', back='answer5'))
+    flashcards.append(Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question6', back='answer6'))
+    flashcards.append(Flashcard.objects.create(owner=user2, flashcard_set=set3, front='question7', back='answer7'))
+    yield flashcards
+    for flashcard in flashcards:
+        flashcard.delete()
 
 
 @pytest.mark.django_db
@@ -46,14 +50,14 @@ class TestFlashcardSet:
         assert response.status_code == status.HTTP_201_CREATED
         assert FlashcardSet.objects.get(pk=response.data['id']) == FlashcardSet.objects.last()
 
-    def test_rename_flashcard_set(self, client, user1, set1):
+    def test_rename_flashcard_set(self, client, set1):
         data = {'name': 'renamed'}
         url = reverse('flashcard-set-detail', kwargs={'pk': set1.pk})
         response = client.patch(url, data)
         assert response.status_code == status.HTTP_200_OK
         assert response.data['name'] == 'renamed'
 
-    def test_delete_flashcard_set(self, client, user1, set1):
+    def test_delete_flashcard_set(self, client, set1):
         url = reverse('flashcard-set-detail', kwargs={'pk': set1.pk})
         response = client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
@@ -62,17 +66,15 @@ class TestFlashcardSet:
 @pytest.mark.django_db
 class TestFlashcard:
 
-    def test_get_flashcards(self, client, user1, user2, set1, set2, set3):
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question1', back='answer1')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question2', back='answer2')
-        Flashcard.objects.create(owner=user1, flashcard_set=set1, front='question3', back='answer3')
-        Flashcard.objects.create(owner=user1, flashcard_set=set2, front='question4', back='answer4')
-        Flashcard.objects.create(owner=user2, flashcard_set=set3, front='question5', back='answer5')
+    def test_get_flashcards(self, client, user1, user2, set1, set2, set3, flashcard_factory):
+        flashcard_factory.create_batch(size=3, owner=user1, flashcard_set=set1)
+        flashcard_factory.create_batch(size=2, owner=user1, flashcard_set=set2)
+        flashcard_factory.create_batch(size=2, owner=user2, flashcard_set=set3)
         response = client.get(reverse('flashcard-list'))
         flashcards = Flashcard.objects.filter(owner=user1)
         serializer = FlashcardSerializer(flashcards, many=True)
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 4
+        assert len(response.data) == 5
         assert response.json() == serializer.data
 
     def test_create_flashcard(self, client, set1):
@@ -138,7 +140,10 @@ class TestFlashcard:
 @pytest.mark.django_db
 class TestFlashcardList:
 
-    def test_get_flashcards(self, client, set1, frozen_flashcards):
+    def test_get_flashcards(self, client, user1, user2, set1, set2, set3, flashcard_factory):
+        flashcard_factory.create_batch(size=5, owner=user1, flashcard_set=set1)
+        flashcard_factory.create_batch(size=2, owner=user1, flashcard_set=set2)
+        flashcard_factory.create_batch(size=2, owner=user2, flashcard_set=set3)
         url = reverse('list', kwargs={'flashcard_set_pk': set1.pk})
         response = client.get(url)
         flashcards = Flashcard.objects.filter(flashcard_set=set1)
@@ -147,7 +152,7 @@ class TestFlashcardList:
         assert len(response.data['results']) == 5
         assert response.json()['results'] == serializer.data
 
-    def test_create_flashcard_not_allowed(self, client, set1, frozen_flashcards):
+    def test_create_flashcard_not_allowed(self, client, set1):
         url = reverse('list', kwargs={'flashcard_set_pk': set1.pk})
         data = {'flashcard_set': set1.pk, 'front': 'question', 'back': 'answer'}
         response = client.post(url, data)
