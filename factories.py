@@ -11,8 +11,7 @@ class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
-    username = fake.first_name_nonbinary()
-    password = fake.password()
+    username = fake.unique.first_name_nonbinary()
 
 
 class FlashcardSetFactory(factory.django.DjangoModelFactory):
