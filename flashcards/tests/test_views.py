@@ -8,6 +8,7 @@ from rest_framework.test import APITestCase
 from ..models import FlashcardSet, Flashcard
 from ..serializers import FlashcardSetSerializer, FlashcardSerializer
 
+
 User = get_user_model()
 
 
